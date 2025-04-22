@@ -35,12 +35,12 @@ export default function Home() {
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4">Local Meats Express</h1>
-      <div className="flex items-center justify-between mb-4">
-        <div>
+      <div className="flex flex-col items-center">
+        <div className="w-full">
           <MeatCatalog />
         </div>
         
-          <Link href="/cart" className="flex items-center transition-colors duration-300 hover:text-green-600">
+          <Link href="/cart" className="flex items-center self-end transition-colors duration-300 hover:text-green-600">
             <ShoppingCart className="mr-2" />
             Cart
             {totalItemsInCart > 0 && (
@@ -52,4 +52,5 @@ export default function Home() {
     </div>
   );
 }
+
 
