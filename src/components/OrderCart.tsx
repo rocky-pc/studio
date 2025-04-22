@@ -3,8 +3,9 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Label } from "@/components/ui/label";
+import { useToast } from "@/hooks/use-toast";
 
 const OrderCart = () => {
   const [cart, setCart] = useState<{ id: string; quantity: number }[]>([]);
@@ -12,6 +13,8 @@ const OrderCart = () => {
     address: "",
     contact: "",
   });
+
+  const { toast } = useToast();
 
   const meatData = [
     {
@@ -37,14 +40,49 @@ const OrderCart = () => {
     },
   ];
 
+  useEffect(() => {
+    // Load cart data from localStorage on component mount
+    const storedCart = localStorage.getItem('cart');
+    if (storedCart) {
+      setCart(JSON.parse(storedCart));
+    }
+
+    // Subscribe to cart updates
+    const handleCartUpdate = () => {
+      const storedCart = localStorage.getItem('cart');
+      if (storedCart) {
+        setCart(JSON.parse(storedCart));
+      }
+    };
+
+    window.addEventListener('cartUpdated', handleCartUpdate);
+
+    return () => {
+      window.removeEventListener('cartUpdated', handleCartUpdate);
+    };
+  }, []);
+
+
   const updateQuantity = (id: string, quantity: number) => {
-    setCart(
-      cart.map((item) => (item.id === id ? { ...item, quantity } : item))
+    const updatedCart = cart.map((item) =>
+      item.id === id ? { ...item, quantity } : item
     );
+    setCart(updatedCart);
+    localStorage.setItem('cart', JSON.stringify(updatedCart));
+    window.dispatchEvent(new Event('cartUpdated'));
   };
 
   const removeFromCart = (id: string) => {
-    setCart(cart.filter((item) => item.id !== id));
+    const updatedCart = cart.filter((item) => item.id !== id);
+    setCart(updatedCart);
+    localStorage.setItem('cart', JSON.stringify(updatedCart));
+    window.dispatchEvent(new Event('cartUpdated'));
+
+    toast({
+      variant: "destructive",
+      title: "Item removed from cart!",
+      description: "The item has been removed from your cart.",
+    });
   };
 
   const calculateTotal = () => {
@@ -153,3 +191,5 @@ const OrderCart = () => {
 };
 
 export default OrderCart;
+
+    

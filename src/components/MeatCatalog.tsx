@@ -2,7 +2,8 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useToast } from "@/hooks/use-toast";
 
 const meatData = [
   {
@@ -30,6 +31,24 @@ const meatData = [
 
 const MeatCatalog = () => {
   const [cart, setCart] = useState<{ id: string; quantity: number }[]>([]);
+  const { toast } = useToast();
+
+  useEffect(() => {
+    // Load cart data from localStorage on component mount
+    const storedCart = localStorage.getItem('cart');
+    if (storedCart) {
+      setCart(JSON.parse(storedCart));
+    }
+  }, []);
+
+  useEffect(() => {
+    // Save cart data to localStorage whenever the cart changes
+    localStorage.setItem('cart', JSON.stringify(cart));
+
+    // Dispatch a custom event so other components can react to cart changes
+    window.dispatchEvent(new Event('cartUpdated'));
+  }, [cart]);
+
 
   const addToCart = (id: string) => {
     const existingItem = cart.find((item) => item.id === id);
@@ -42,6 +61,10 @@ const MeatCatalog = () => {
     } else {
       setCart([...cart, { id, quantity: 1 }]);
     }
+    toast({
+      title: "Item added to cart!",
+      description: "See your cart for details.",
+    });
   };
 
   return (
@@ -70,3 +93,5 @@ const MeatCatalog = () => {
 };
 
 export default MeatCatalog;
+
+    
