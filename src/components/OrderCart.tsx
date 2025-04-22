@@ -88,7 +88,7 @@ const OrderCart = () => {
   };
 
   const removeFromCart = (id: string) => {
-    const updatedCart = cart.filter((item) => item.id !== id);
+    const updatedCart = cart.filter((item) => item.id !== item.id);
     setCart(updatedCart);
     localStorage.setItem('cart', JSON.stringify(updatedCart));
     window.dispatchEvent(new Event('cartUpdated'));
@@ -111,8 +111,8 @@ const OrderCart = () => {
     return total.toFixed(2);
   };
 
-  const handleSubmit = () => {
-     if (cart.length === 0) {
+   const handleSubmit = () => {
+        if (cart.length === 0) {
             toast({
                 title: "Your cart is empty!",
                 description: "Please add items to your cart before confirming the order.",
@@ -216,6 +216,7 @@ const OrderCart = () => {
                   setDeliveryDetails({ ...deliveryDetails, address: e.target.value })
                 }
                 className="transition-colors duration-300 focus:ring-green-500"
+                required // Make address mandatory
               />
             </div>
             <div className="grid gap-1">
@@ -228,6 +229,7 @@ const OrderCart = () => {
                   setDeliveryDetails({ ...deliveryDetails, contact: e.target.value })
                 }
                 className="transition-colors duration-300 focus:ring-green-500"
+                required // Make contact mandatory
               />
             </div>
           </div>
@@ -258,4 +260,3 @@ const OrderCart = () => {
 };
 
 export default OrderCart;
-
