@@ -9,6 +9,17 @@ import { useToast } from "@/hooks/use-toast";
 import { ShoppingCart } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 const OrderCart = () => {
   const [cart, setCart] = useState<{ id: string; quantity: number }[]>([]);
@@ -16,6 +27,7 @@ const OrderCart = () => {
     address: "",
     contact: "",
   });
+  const [open, setOpen] = useState(false); // State for the alert dialog
 
   const { toast } = useToast();
 
@@ -100,12 +112,36 @@ const OrderCart = () => {
   };
 
   const handleSubmit = () => {
-    // Process order logic here (e.g., send to backend)
-    alert(
-      `Order confirmed!\nOrder ID: ${Math.random()
-        .toString(36)
-        .substring(7)}\nTotal: $${calculateTotal()}`
-    );
+     if (cart.length === 0) {
+            toast({
+                title: "Your cart is empty!",
+                description: "Please add items to your cart before confirming the order.",
+            });
+            return;
+        }
+
+        if (!deliveryDetails.address || !deliveryDetails.contact) {
+            toast({
+                title: "Delivery details required!",
+                description: "Please provide your address and contact information.",
+            });
+            return;
+        }
+    setOpen(true);
+  };
+
+  const confirmOrder = () => {
+    setOpen(false);
+        const orderId = Math.random().toString(36).substring(7);
+        // Clear the cart
+        setCart([]);
+        localStorage.removeItem('cart');
+        window.dispatchEvent(new Event('cartUpdated'));
+
+        toast({
+            title: "Order confirmed!",
+            description: `Order ID: ${orderId}\nTotal: $${calculateTotal()}`,
+        });
   };
 
   const totalItemsInCart = cart.reduce((total, item) => total + item.quantity, 0);
@@ -197,12 +233,30 @@ const OrderCart = () => {
           </div>
         </div>
 
-        <Button className="mt-4 w-full transition-colors duration-300 hover:bg-green-600" onClick={handleSubmit}>
-          Confirm Order
-        </Button>
+        <AlertDialog>
+          <AlertDialogTrigger asChild>
+            <Button className="mt-4 w-full transition-colors duration-300 hover:bg-green-600" onClick={handleSubmit}>
+              Confirm Order
+            </Button>
+          </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Confirm Order</AlertDialogTitle>
+              <AlertDialogDescription>
+                Are you sure you want to confirm your order?
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel onClick={() => setOpen(false)}>Cancel</AlertDialogCancel>
+              <AlertDialogAction onClick={confirmOrder}>Confirm</AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </CardContent>
     </Card>
   );
 };
 
 export default OrderCart;
+
+    
