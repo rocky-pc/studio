@@ -1,5 +1,5 @@
 import MeatCatalog from '@/components/MeatCatalog';
-import OrderCart from '@/components/OrderCart';
+import Link from 'next/link';
 
 export default function Home() {
   return (
@@ -10,9 +10,10 @@ export default function Home() {
           <MeatCatalog />
         </div>
         <div>
-          <OrderCart />
+          <Link href="/cart">View Cart</Link>
         </div>
       </div>
     </div>
   );
 }
+
