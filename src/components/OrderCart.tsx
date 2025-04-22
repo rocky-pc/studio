@@ -6,6 +6,9 @@ import { Input } from "@/components/ui/input";
 import { useState, useEffect } from "react";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
+import { ShoppingCart } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
 
 const OrderCart = () => {
   const [cart, setCart] = useState<{ id: string; quantity: number }[]>([]);
@@ -105,10 +108,20 @@ const OrderCart = () => {
     );
   };
 
+  const totalItemsInCart = cart.reduce((total, item) => total + item.quantity, 0);
+
+
   return (
-    <Card>
+    <Card className="animate-in fade-in duration-75">
       <CardHeader>
-        <CardTitle>Order Cart</CardTitle>
+        <CardTitle>
+          Order Cart
+          {totalItemsInCart > 0 && (
+            <Badge variant="secondary" className="ml-2">
+              {totalItemsInCart}
+            </Badge>
+          )}
+        </CardTitle>
       </CardHeader>
       <CardContent>
         {cart.length === 0 ? (
@@ -132,13 +145,13 @@ const OrderCart = () => {
                           onChange={(e) =>
                             updateQuantity(item.id, parseInt(e.target.value))
                           }
-                          className="w-20 text-center"
+                          className="w-20 text-center transition-colors duration-300 focus:ring-green-500"
                         />
                         <Button
                           variant="destructive"
                           size="sm"
                           onClick={() => removeFromCart(item.id)}
-                          className="ml-2"
+                          className="ml-2 transition-colors duration-300 hover:bg-red-600"
                         >
                           Remove
                         </Button>
@@ -166,6 +179,7 @@ const OrderCart = () => {
                 onChange={(e) =>
                   setDeliveryDetails({ ...deliveryDetails, address: e.target.value })
                 }
+                className="transition-colors duration-300 focus:ring-green-500"
               />
             </div>
             <div className="grid gap-1">
@@ -177,12 +191,13 @@ const OrderCart = () => {
                 onChange={(e) =>
                   setDeliveryDetails({ ...deliveryDetails, contact: e.target.value })
                 }
+                className="transition-colors duration-300 focus:ring-green-500"
               />
             </div>
           </div>
         </div>
 
-        <Button className="mt-4 w-full" onClick={handleSubmit}>
+        <Button className="mt-4 w-full transition-colors duration-300 hover:bg-green-600" onClick={handleSubmit}>
           Confirm Order
         </Button>
       </CardContent>
@@ -191,5 +206,3 @@ const OrderCart = () => {
 };
 
 export default OrderCart;
-
-    

@@ -4,6 +4,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
+import { ShoppingCart } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
 
 const meatData = [
   {
@@ -67,31 +70,39 @@ const MeatCatalog = () => {
     });
   };
 
+  const totalItemsInCart = cart.reduce((total, item) => total + item.quantity, 0);
+
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-      {meatData.map((meat) => (
-        <Card key={meat.id}>
-          <CardHeader>
-            <CardTitle>{meat.name}</CardTitle>
-            <CardDescription>{meat.description}</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <img
-              src={meat.image}
-              alt={meat.name}
-              className="rounded-md mb-2 w-full h-32 object-cover"
-            />
-            <div className="flex items-center justify-between">
-              <span>Price: ${meat.price.toFixed(2)}</span>
-              <Button onClick={() => addToCart(meat.id)}>Add to Cart</Button>
-            </div>
-          </CardContent>
-        </Card>
-      ))}
+    <div>
+      <div className="flex items-center justify-end mb-4">
+        <ShoppingCart className="mr-2" />
+        <Badge variant="secondary">{totalItemsInCart}</Badge>
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {meatData.map((meat) => (
+          <Card key={meat.id} className="animate-in fade-in duration-75">
+            <CardHeader>
+              <CardTitle>{meat.name}</CardTitle>
+              <CardDescription>{meat.description}</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <img
+                src={meat.image}
+                alt={meat.name}
+                className="rounded-md mb-2 w-full h-32 object-cover"
+              />
+              <div className="flex items-center justify-between">
+                <span>Price: ${meat.price.toFixed(2)}</span>
+                <Button onClick={() => addToCart(meat.id)}
+                  className="transition-colors duration-300 hover:bg-green-600"
+                >Add to Cart</Button>
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
     </div>
   );
 };
 
 export default MeatCatalog;
-
-    
