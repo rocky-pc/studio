@@ -39,13 +39,15 @@ export default function Home() {
         <div>
           <MeatCatalog />
         </div>
-        <Link href="/cart" className="flex items-center transition-colors duration-300 hover:text-green-600">
-          <ShoppingCart className="mr-2" />
-          Cart
-          {totalItemsInCart > 0 && (
-            <Badge variant="secondary" className="ml-2">{totalItemsInCart}</Badge>
-          )}
-        </Link>
+        
+          <Link href="/cart" className="flex items-center transition-colors duration-300 hover:text-green-600">
+            <ShoppingCart className="mr-2" />
+            Cart
+            {totalItemsInCart > 0 && (
+              <Badge variant="secondary" className="ml-2">{totalItemsInCart}</Badge>
+            )}
+          </Link>
+        
       </div>
     </div>
   );

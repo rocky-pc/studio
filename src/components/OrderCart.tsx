@@ -221,7 +221,7 @@ const OrderCart = () => {
             <div className="grid gap-1">
               <Label htmlFor="contact">Contact</Label>
               <Input
-                type="text"
+                type="number"
                 id="contact"
                 value={deliveryDetails.contact}
                 onChange={(e) =>
@@ -259,4 +259,3 @@ const OrderCart = () => {
 
 export default OrderCart;
 
-    
